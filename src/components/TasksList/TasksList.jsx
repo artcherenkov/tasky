@@ -12,10 +12,10 @@ const TasksList = () => {
     <div className="board__tasks">
       {tasks.map((t) => {
         if (editingTaskId !== t.id) {
-          return <Task task={t} />;
+          return <Task key={`task-${t.id}`} task={t} />;
         }
 
-        return <EditTask />;
+        return <EditTask key={`task-${t.id}`} />;
       })}
     </div>
   );

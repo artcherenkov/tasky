@@ -37,7 +37,7 @@ export const TASKS = [
     id: "2",
     color: "blue",
     description: "find money for new macbook",
-    dueDate: "2020-07-19T09:52:05.173Z",
+    dueDate: null,
     isArchived: true,
     isFavorite: true,
     repeatingDays: {
@@ -54,7 +54,7 @@ export const TASKS = [
     id: "3",
     color: "pink",
     description: "find money for vacancy",
-    dueDate: "2021-07-19T09:52:05.173Z",
+    dueDate: "2020-07-19T09:52:05.173Z",
     isArchived: false,
     isFavorite: true,
     repeatingDays: {

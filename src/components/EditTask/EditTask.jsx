@@ -1,25 +1,124 @@
+import React, { forwardRef, useState } from "react";
 import classnames from "classnames";
 import moment from "moment";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import { getEditingTaskId, getTaskById } from "../../store/app-store/selectors";
 import IconWave from "../IconWave/IconWave";
 import { loadTask, setTaskToEdit } from "../../store/app-store/actions";
+
+const REPEAT_FIELD = [
+  {
+    id: "repeat-mo-1",
+    value: "mo",
+  },
+  {
+    id: "repeat-tu-1",
+    value: "tu",
+  },
+  {
+    id: "repeat-we-1",
+    value: "we",
+  },
+  {
+    id: "repeat-th-1",
+    value: "th",
+  },
+  {
+    id: "repeat-fr-1",
+    value: "fr",
+  },
+  {
+    id: "repeat-sa-1",
+    value: "sa",
+  },
+  {
+    id: "repeat-su-1",
+    value: "su",
+  },
+];
+const COLOR_FIELD = ["black", "yellow", "blue", "green", "pink"];
 
 const EditTask = () => {
   const dispatch = useDispatch();
   const editingTaskId = useSelector(getEditingTaskId, shallowEqual);
   const task = useSelector(getTaskById(editingTaskId), shallowEqual);
 
-  const { description, color, dueDate, repeatingDays } = task;
+  const [description, setDescription] = useState(task.description);
+  const [dueDate, setDueDate] = useState(task.dueDate);
+  const [repeatingDays, setRepeatingDays] = useState(task.repeatingDays);
+  const [color, setColor] = useState(task.color);
+
   const isRepeating = Object.values(repeatingDays).some((d) => d);
   const isExpired = moment(dueDate).isBefore(moment());
 
+  const [showRepeat, setShowRepeat] = useState(isRepeating);
+  const [showDate, setShowDate] = useState(!!dueDate);
+
   const onSubmit = (evt) => {
     evt.preventDefault();
-    dispatch(loadTask(task));
+    const updatedTask = { ...task, description, dueDate, repeatingDays, color };
+    dispatch(loadTask(updatedTask));
     dispatch(setTaskToEdit(-1));
   };
+
+  const onRepeatingDaysChange = (day) => (evt) => {
+    setRepeatingDays((prevState) => {
+      const newRepeatingDays = {
+        ...prevState,
+        [day]: evt.target.checked,
+      };
+
+      if (Object.values(newRepeatingDays).every((d) => !d)) {
+        setShowRepeat(false);
+      }
+
+      return newRepeatingDays;
+    });
+  };
+
+  const onRepeatBtnClick = () => {
+    if (showRepeat) {
+      setRepeatingDays(
+        Object.keys(repeatingDays).reduce((acc, key) => {
+          acc = { ...acc, [key]: false };
+          return acc;
+        }, {})
+      );
+      setShowRepeat(false);
+    } else {
+      setShowDate(false);
+      setDueDate(null);
+      setShowRepeat(true);
+    }
+  };
+
+  const onDateBtnClick = () => {
+    if (showDate) {
+      setDueDate(null);
+      setShowDate(false);
+    } else {
+      setShowDate(true);
+    }
+  };
+
+  const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
+    <label className="card__input-deadline-wrap">
+      <input
+        className="card__date"
+        type="text"
+        placeholder="23 September"
+        name="date"
+        onClick={onClick}
+        value={dueDate ? moment(dueDate).format("DD MMMM kk:mm") : ""}
+        ref={ref}
+        autoComplete="off"
+        onChange={() => {}}
+      />
+    </label>
+  ));
 
   return (
     <article
@@ -40,109 +139,93 @@ const EditTask = () => {
                 className="card__text"
                 placeholder="Start typing your text here..."
                 name="text"
-              >
-                {description}
-              </textarea>
+                onChange={(evt) => setDescription(evt.target.value)}
+                value={description}
+              />
             </label>
           </div>
 
           <div className="card__settings">
             <div className="card__details">
               <div className="card__dates">
-                <button className="card__date-deadline-toggle" type="button">
-                  date: <span className="card__date-status">no</span>
+                <button
+                  className="card__date-deadline-toggle"
+                  type="button"
+                  disabled={isRepeating}
+                  onClick={onDateBtnClick}
+                >
+                  date:{" "}
+                  <span className="card__date-status">
+                    {showDate ? "yes" : "no"}
+                  </span>
                 </button>
 
-                <fieldset className="card__date-deadline" disabled>
-                  <label className="card__input-deadline-wrap">
-                    <input
-                      className="card__date"
-                      type="text"
-                      placeholder="23 September"
-                      name="date"
-                    />
-                  </label>
+                <fieldset className="card__date-deadline" disabled={!showDate}>
+                  <DatePicker
+                    selected={dueDate ? new Date(dueDate) : new Date()}
+                    onChange={(date) => setDueDate(date)}
+                    showTimeInput
+                    timeInputLabel="Time:"
+                    customInput={<ExampleCustomInput />}
+                    shouldCloseOnSelect={false}
+                  >
+                    <span
+                      style={{
+                        display: "flex",
+                        padding: 10,
+                        width: 240,
+                        boxSizing: "border-box",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <button
+                        style={{
+                          fontFamily: "HelveticaNeueCyr",
+                          fontWeight: "bold",
+                          fontSize: 14,
+                          textAlign: "center",
+                          width: 100,
+                          margin: 0,
+                          padding: 5,
+                          paddingTop: 7,
+                          cursor: "pointer",
+                        }}
+                      >
+                        Submit
+                      </button>
+                    </span>
+                  </DatePicker>
                 </fieldset>
 
-                <button className="card__repeat-toggle" type="button">
-                  repeat:<span className="card__repeat-status">no</span>
+                <button
+                  className="card__repeat-toggle"
+                  type="button"
+                  onClick={onRepeatBtnClick}
+                >
+                  repeat:
+                  <span className="card__repeat-status">
+                    {showRepeat ? "yes" : "no"}
+                  </span>
                 </button>
 
-                <fieldset className="card__repeat-days" disabled>
+                <fieldset className="card__repeat-days" disabled={!showRepeat}>
                   <div className="card__repeat-days-inner">
-                    <input
-                      className="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      id="repeat-mo-1"
-                      name="repeat"
-                      value="mo"
-                    />
-                    <label className="card__repeat-day" htmlFor="repeat-mo-1">
-                      mo
-                    </label>
-                    <input
-                      className="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      id="repeat-tu-1"
-                      name="repeat"
-                      value="tu"
-                      checked
-                    />
-                    <label className="card__repeat-day" htmlFor="repeat-tu-1">
-                      tu
-                    </label>
-                    <input
-                      className="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      id="repeat-we-1"
-                      name="repeat"
-                      value="we"
-                    />
-                    <label className="card__repeat-day" htmlFor="repeat-we-1">
-                      we
-                    </label>
-                    <input
-                      className="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      id="repeat-th-1"
-                      name="repeat"
-                      value="th"
-                    />
-                    <label className="card__repeat-day" htmlFor="repeat-th-1">
-                      th
-                    </label>
-                    <input
-                      className="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      id="repeat-fr-1"
-                      name="repeat"
-                      value="fr"
-                      checked
-                    />
-                    <label className="card__repeat-day" htmlFor="repeat-fr-1">
-                      fr
-                    </label>
-                    <input
-                      className="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      name="repeat"
-                      value="sa"
-                      id="repeat-sa-1"
-                    />
-                    <label className="card__repeat-day" htmlFor="repeat-sa-1">
-                      sa
-                    </label>
-                    <input
-                      className="visually-hidden card__repeat-day-input"
-                      type="checkbox"
-                      id="repeat-su-1"
-                      name="repeat"
-                      value="su"
-                      checked
-                    />
-                    <label className="card__repeat-day" htmlFor="repeat-su-1">
-                      su
-                    </label>
+                    {REPEAT_FIELD.map((f) => (
+                      <React.Fragment key={f.id}>
+                        <input
+                          className="visually-hidden card__repeat-day-input"
+                          type="checkbox"
+                          id={f.id}
+                          name="repeat"
+                          value={f.value}
+                          checked={repeatingDays[f.value]}
+                          onChange={onRepeatingDaysChange(f.value)}
+                        />
+                        <label className="card__repeat-day" htmlFor={f.id}>
+                          {f.value}
+                        </label>
+                      </React.Fragment>
+                    ))}
                   </div>
                 </fieldset>
               </div>
@@ -151,87 +234,25 @@ const EditTask = () => {
             <div className="card__colors-inner">
               <h3 className="card__colors-title">Color</h3>
               <div className="card__colors-wrap">
-                <input
-                  type="radio"
-                  id="color-black-1"
-                  className="
-                          card__color-input card__color-input--black
-                          visually-hidden
-                        "
-                  name="color"
-                  value="black"
-                  checked
-                />
-                <label
-                  htmlFor="color-black-1"
-                  className="card__color card__color--black"
-                >
-                  black
-                </label>
-                <input
-                  type="radio"
-                  id="color-yellow-1"
-                  className="
-                          card__color-input card__color-input--yellow
-                          visually-hidden
-                        "
-                  name="color"
-                  value="yellow"
-                />
-                <label
-                  htmlFor="color-yellow-1"
-                  className="card__color card__color--yellow"
-                >
-                  yellow
-                </label>
-                <input
-                  type="radio"
-                  id="color-blue-1"
-                  className="
-                          card__color-input card__color-input--blue
-                          visually-hidden
-                        "
-                  name="color"
-                  value="blue"
-                />
-                <label
-                  htmlFor="color-blue-1"
-                  className="card__color card__color--blue"
-                >
-                  blue
-                </label>
-                <input
-                  type="radio"
-                  id="color-green-1"
-                  className="
-                          card__color-input card__color-input--green
-                          visually-hidden
-                        "
-                  name="color"
-                  value="green"
-                />
-                <label
-                  htmlFor="color-green-1"
-                  className="card__color card__color--green"
-                >
-                  green
-                </label>
-                <input
-                  type="radio"
-                  id="color-pink-1"
-                  className="
-                          card__color-input card__color-input--pink
-                          visually-hidden
-                        "
-                  name="color"
-                  value="pink"
-                />
-                <label
-                  htmlFor="color-pink-1"
-                  className="card__color card__color--pink"
-                >
-                  pink
-                </label>
+                {COLOR_FIELD.map((f) => (
+                  <React.Fragment key={`color-${f}-1`}>
+                    <input
+                      type="radio"
+                      id={`color-${f}-1`}
+                      className={`card__color - input card__color-input--${f} visually-hidden`}
+                      name="color"
+                      value={f}
+                      checked={f === color}
+                      onChange={(evt) => setColor(evt.target.value)}
+                    />
+                    <label
+                      htmlFor={`color-${f}-1`}
+                      className={`card__color card__color--${f}`}
+                    >
+                      {f}
+                    </label>
+                  </React.Fragment>
+                ))}
               </div>
             </div>
           </div>

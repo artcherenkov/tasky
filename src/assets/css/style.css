@@ -99,6 +99,9 @@ body {
   cursor: inherit;
 }
 .control__label--new-task {
+  padding: 0;
+  border: none;
+  background: transparent;
   margin-right: auto;
 }
 
@@ -699,6 +702,19 @@ body {
 }
 .card__save:hover {
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+.card--edit .card__delete {
+  display: flex;
+  padding: 5px 0;
+  background-color: transparent;
+  justify-content: center;
+  margin: 5px 0 0;
+  color: red;
+  text-transform: uppercase;
+  font-size: 10px;
+  cursor: pointer;
+  border: 1px solid red;
 }
 
 .card--edit .card__delete:hover {
