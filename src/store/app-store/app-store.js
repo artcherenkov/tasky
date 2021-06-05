@@ -17,7 +17,7 @@ const appStore = (state = initialState, action) => {
       );
 
       if (foundTaskIndex === -1) {
-        return { ...state, tasks: [...currentTasks, taskToLoad] };
+        return { ...state, tasks: [taskToLoad, ...currentTasks] };
       }
 
       currentTasks[foundTaskIndex] = taskToLoad;
