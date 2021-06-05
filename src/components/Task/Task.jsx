@@ -1,12 +1,18 @@
 import classnames from "classnames";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+
+import { setTaskToEdit } from "../../store/app-store/actions";
 
 const Task = (props) => {
+  const dispatch = useDispatch();
   const { task } = props;
-  const { color, description, dueDate, repeatingDays } = task;
+  const { id, color, description, dueDate, repeatingDays } = task;
 
   const isRepeating = Object.values(repeatingDays).some((d) => d);
   const isExpired = moment(dueDate).isBefore(moment());
+
+  const onEditBtnClick = () => dispatch(setTaskToEdit(id));
 
   return (
     <article
@@ -18,7 +24,11 @@ const Task = (props) => {
       <div className="card__form">
         <div className="card__inner">
           <div className="card__control">
-            <button type="button" className="card__btn card__btn--edit">
+            <button
+              type="button"
+              className="card__btn card__btn--edit"
+              onClick={onEditBtnClick}
+            >
               edit
             </button>
             <button type="button" className="card__btn card__btn--archive">

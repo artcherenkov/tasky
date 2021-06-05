@@ -1,8 +1,14 @@
 export const ActionType = {
-  SAY_HELLO: `SAY_HELLO`,
+  LOAD_TASK: `store/load_task`,
+  SET_TASK_TO_EDIT: "store/set_task_to_edit",
 };
 
-export const sayHello = (hello) => ({
-  type: ActionType.SAY_HELLO,
-  payload: hello,
+export const loadTask = (payload) => ({
+  type: ActionType.LOAD_TASK,
+  payload,
+});
+
+export const setTaskToEdit = (payload) => ({
+  type: ActionType.SET_TASK_TO_EDIT,
+  payload,
 });

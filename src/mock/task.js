@@ -18,7 +18,7 @@ export const TASKS = [
   },
   {
     id: "1",
-    color: "red",
+    color: "green",
     description: "find money for food",
     dueDate: "2021-07-19T09:52:05.173Z",
     isArchived: true,
