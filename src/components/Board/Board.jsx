@@ -1,12 +1,5 @@
 const Board = (props) => {
-  return (
-    <section className="board container">
-      {props.children}
-      <button className="load-more" type="button">
-        load more
-      </button>
-    </section>
-  );
+  return <section className="board container">{props.children}</section>;
 };
 
 export default Board;

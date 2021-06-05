@@ -2,7 +2,7 @@ import classnames from "classnames";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 
-import { setTaskToEdit } from "../../store/app-store/actions";
+import { loadTask, setTaskToEdit } from "../../store/app-store/actions";
 
 const Task = (props) => {
   const dispatch = useDispatch();
@@ -13,6 +13,10 @@ const Task = (props) => {
   const isExpired = moment(dueDate).isBefore(moment());
 
   const onEditBtnClick = () => dispatch(setTaskToEdit(id));
+  const onArchiveBtnClick = () =>
+    dispatch(loadTask({ ...task, isArchived: !task.isArchived }));
+  const onFavoriteBtnClick = () =>
+    dispatch(loadTask({ ...task, isFavorite: !task.isFavorite }));
 
   return (
     <article
@@ -31,12 +35,21 @@ const Task = (props) => {
             >
               edit
             </button>
-            <button type="button" className="card__btn card__btn--archive">
+            <button
+              type="button"
+              className={classnames("card__btn", "card__btn--archive", {
+                "card__btn--disabled": task.isArchived,
+              })}
+              onClick={onArchiveBtnClick}
+            >
               archive
             </button>
             <button
               type="button"
-              className="card__btn card__btn--favorites card__btn--disabled"
+              className={classnames("card__btn", "card__btn--favorites", {
+                "card__btn--disabled": task.isFavorite,
+              })}
+              onClick={onFavoriteBtnClick}
             >
               favorites
             </button>
