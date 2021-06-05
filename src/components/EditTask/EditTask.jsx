@@ -7,7 +7,11 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import { getEditingTaskId, getTaskById } from "../../store/app-store/selectors";
 import IconWave from "../IconWave/IconWave";
-import { loadTask, setTaskToEdit } from "../../store/app-store/actions";
+import {
+  loadTask,
+  removeTask,
+  setTaskToEdit,
+} from "../../store/app-store/actions";
 
 const REPEAT_FIELD = [
   {
@@ -57,13 +61,6 @@ const EditTask = () => {
   const [showRepeat, setShowRepeat] = useState(isRepeating);
   const [showDate, setShowDate] = useState(!!dueDate);
 
-  const onSubmit = (evt) => {
-    evt.preventDefault();
-    const updatedTask = { ...task, description, dueDate, repeatingDays, color };
-    dispatch(loadTask(updatedTask));
-    dispatch(setTaskToEdit(-1));
-  };
-
   const onRepeatingDaysChange = (day) => (evt) => {
     setRepeatingDays((prevState) => {
       const newRepeatingDays = {
@@ -94,7 +91,6 @@ const EditTask = () => {
       setShowRepeat(true);
     }
   };
-
   const onDateBtnClick = () => {
     if (showDate) {
       setDueDate(null);
@@ -102,6 +98,15 @@ const EditTask = () => {
     } else {
       setShowDate(true);
     }
+  };
+  const onSubmit = (evt) => {
+    evt.preventDefault();
+    const updatedTask = { ...task, description, dueDate, repeatingDays, color };
+    dispatch(loadTask(updatedTask));
+    dispatch(setTaskToEdit(-1));
+  };
+  const onDeleteBtnClick = () => {
+    dispatch(removeTask(editingTaskId));
   };
 
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
@@ -132,7 +137,6 @@ const EditTask = () => {
           <div className="card__color-bar">
             <IconWave color={color} />
           </div>
-
           <div className="card__textarea-wrap">
             <label>
               <textarea
@@ -144,7 +148,6 @@ const EditTask = () => {
               />
             </label>
           </div>
-
           <div className="card__settings">
             <div className="card__details">
               <div className="card__dates">
@@ -256,12 +259,15 @@ const EditTask = () => {
               </div>
             </div>
           </div>
-
           <div className="card__status-btns">
             <button className="card__save" type="submit">
               save
             </button>
-            <button className="card__delete" type="button">
+            <button
+              className="card__delete"
+              type="button"
+              onClick={onDeleteBtnClick}
+            >
               delete
             </button>
           </div>

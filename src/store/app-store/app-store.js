@@ -26,6 +26,12 @@ const appStore = (state = initialState, action) => {
     case ActionType.SET_TASK_TO_EDIT: {
       return { ...state, editingTaskId: action.payload };
     }
+    case ActionType.REMOVE_TASK: {
+      const updatedTasks = state.tasks
+        .slice()
+        .filter((t) => t.id !== action.payload);
+      return { ...state, tasks: updatedTasks };
+    }
     default:
       return state;
   }

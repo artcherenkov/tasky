@@ -1,7 +1,4 @@
-import { nanoid } from "nanoid";
-
 export const DEFAULT_TASK = {
-  id: nanoid(),
   color: "black",
   description: "Введите заголовок задачи",
   dueDate: null,
