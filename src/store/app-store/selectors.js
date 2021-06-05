@@ -3,3 +3,4 @@ export const getEditingTaskId = (state) => state.store.editingTaskId;
 export const getTaskById = (id) => (state) =>
   state.store.tasks.find((t) => t.id === id);
 export const getFilter = (state) => state.store.filter;
+export const getSort = (state) => state.store.sort;

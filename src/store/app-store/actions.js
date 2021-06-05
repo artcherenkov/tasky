@@ -3,6 +3,7 @@ export const ActionType = {
   REMOVE_TASK: `store/remove_task`,
   SET_TASK_TO_EDIT: "store/set_task_to_edit",
   CHANGE_FILTER: "store/change_filter",
+  CHANGE_SORT: "store/change_sort",
 };
 
 export const loadTask = (payload) => ({
@@ -22,5 +23,10 @@ export const removeTask = (payload) => ({
 
 export const changeFilter = (payload) => ({
   type: ActionType.CHANGE_FILTER,
+  payload,
+});
+
+export const changeSort = (payload) => ({
+  type: ActionType.CHANGE_SORT,
   payload,
 });
