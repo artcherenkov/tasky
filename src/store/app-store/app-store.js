@@ -4,6 +4,7 @@ import { ActionType } from "./actions";
 const initialState = {
   tasks: TASKS,
   editingTaskId: -1,
+  filter: "ALL",
 };
 
 const appStore = (state = initialState, action) => {
@@ -31,6 +32,9 @@ const appStore = (state = initialState, action) => {
         .slice()
         .filter((t) => t.id !== action.payload);
       return { ...state, tasks: updatedTasks };
+    }
+    case ActionType.CHANGE_FILTER: {
+      return { ...state, filter: action.payload };
     }
     default:
       return state;
