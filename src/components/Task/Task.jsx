@@ -12,7 +12,7 @@ const Task = (props) => {
   const isRepeating = Object.values(repeatingDays).some((d) => d);
   const isExpired = moment(dueDate).isBefore(moment());
 
-  const onEditBtnClick = () => dispatch(setTaskToEdit(id));
+  const onEditBtnClick = () => dispatch(setTaskToEdit({ id }));
   const onArchiveBtnClick = () =>
     dispatch(loadTask({ ...task, isArchived: !task.isArchived }));
   const onFavoriteBtnClick = () =>

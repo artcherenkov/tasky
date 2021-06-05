@@ -28,9 +28,17 @@ const appStore = (state = initialState, action) => {
       return { ...state, tasks: currentTasks };
     }
     case ActionType.SET_TASK_TO_EDIT: {
+      const { id, isNew = false } = action.payload;
+      if (!isNew) {
+        return {
+          ...state,
+          editingTaskId: id,
+        };
+      }
+
       return {
         ...state,
-        editingTaskId: action.payload,
+        editingTaskId: id,
         filter: FilterName.ALL,
         sort: ComparatorName.DEFAULT,
       };

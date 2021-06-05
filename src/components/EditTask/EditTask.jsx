@@ -103,7 +103,7 @@ const EditTask = () => {
     evt.preventDefault();
     const updatedTask = { ...task, description, dueDate, repeatingDays, color };
     dispatch(loadTask(updatedTask));
-    dispatch(setTaskToEdit(-1));
+    dispatch(setTaskToEdit({ id: -1 }));
   };
   const onDeleteBtnClick = () => {
     dispatch(removeTask(editingTaskId));

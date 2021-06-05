@@ -14,7 +14,7 @@ const Header = () => {
   const onAddTaskClick = () => {
     const newTask = createNewTask();
     dispatch(loadTask(newTask));
-    dispatch(setTaskToEdit(newTask.id));
+    dispatch(setTaskToEdit({ id: newTask.id, isNew: true }));
   };
 
   return (
