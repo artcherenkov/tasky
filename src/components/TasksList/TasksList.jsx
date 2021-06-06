@@ -29,7 +29,7 @@ const TasksList = () => {
 
   useEffect(() => {
     dispatch(fetchTasks());
-  }, []);
+  }, [dispatch]);
 
   if (!tasks) {
     return <h1>Loading...</h1>;
