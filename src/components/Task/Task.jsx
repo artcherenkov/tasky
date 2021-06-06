@@ -2,7 +2,11 @@ import classnames from "classnames";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 
-import { loadTask, setTaskToEdit } from "../../store/app-store/actions";
+import {
+  editTask,
+  loadTask,
+  setTaskToEdit,
+} from "../../store/app-store/actions";
 
 const Task = (props) => {
   const dispatch = useDispatch();
@@ -14,9 +18,9 @@ const Task = (props) => {
 
   const onEditBtnClick = () => dispatch(setTaskToEdit({ id: _id }));
   const onArchiveBtnClick = () =>
-    dispatch(loadTask({ ...task, isArchived: !task.isArchived }));
+    dispatch(editTask({ ...task, isArchived: !task.isArchived }));
   const onFavoriteBtnClick = () =>
-    dispatch(loadTask({ ...task, isFavorite: !task.isFavorite }));
+    dispatch(editTask({ ...task, isFavorite: !task.isFavorite }));
 
   return (
     <article
