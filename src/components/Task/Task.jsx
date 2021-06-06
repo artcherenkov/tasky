@@ -2,11 +2,7 @@ import classnames from "classnames";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 
-import {
-  editTask,
-  loadTask,
-  setTaskToEdit,
-} from "../../store/app-store/actions";
+import { editTask, setTaskToEdit } from "../../store/app-store/actions";
 
 const Task = (props) => {
   const dispatch = useDispatch();

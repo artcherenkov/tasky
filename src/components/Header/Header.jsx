@@ -2,9 +2,14 @@ import { useDispatch } from "react-redux";
 
 import { loadTask, setTaskToEdit } from "../../store/app-store/actions";
 import { DEFAULT_TASK } from "../../utils/conts";
+import moment from "moment";
 
 const createNewTask = () => {
-  return { _id: "new task", ...DEFAULT_TASK };
+  return {
+    _id: "new task",
+    createdAt: new Date().toISOString(),
+    ...DEFAULT_TASK,
+  };
 };
 
 const Header = () => {
