@@ -52,6 +52,8 @@ const EditTask = () => {
   const editingTaskId = useSelector(getEditingTaskId, shallowEqual);
   const task = useSelector(getTaskById(editingTaskId), shallowEqual);
 
+  const [isChanged, setIsChanged] = useState(false);
+
   const [description, setDescription] = useState(task.description);
   const [dueDate, setDueDate] = useState(task.dueDate);
   const [repeatingDays, setRepeatingDays] = useState(task.repeatingDays);
@@ -76,6 +78,10 @@ const EditTask = () => {
 
       return newRepeatingDays;
     });
+
+    if (!isChanged) {
+      setIsChanged(true);
+    }
   };
 
   const onRepeatBtnClick = () => {
@@ -104,6 +110,10 @@ const EditTask = () => {
   const onSubmit = (evt) => {
     evt.preventDefault();
     const updatedTask = { ...task, description, dueDate, repeatingDays, color };
+    if (!isChanged) {
+      dispatch(setTaskToEdit({ id: -1 }));
+      return;
+    }
     if (updatedTask._id === "new task") {
       dispatch(postTask(updatedTask)).then(() => {
         dispatch(removeTask("new task"));
@@ -153,7 +163,12 @@ const EditTask = () => {
                 className="card__text"
                 placeholder="Start typing your text here..."
                 name="text"
-                onChange={(evt) => setDescription(evt.target.value)}
+                onChange={(evt) => {
+                  setDescription(evt.target.value);
+                  if (!isChanged) {
+                    setIsChanged(true);
+                  }
+                }}
                 value={description}
               />
             </label>
@@ -176,7 +191,12 @@ const EditTask = () => {
                 <fieldset className="card__date-deadline" disabled={!showDate}>
                   <DatePicker
                     selected={dueDate ? new Date(dueDate) : new Date()}
-                    onChange={(date) => setDueDate(date)}
+                    onChange={(date) => {
+                      setDueDate(date);
+                      if (!isChanged) {
+                        setIsChanged(true);
+                      }
+                    }}
                     showTimeInput
                     timeInputLabel="Time:"
                     customInput={<ExampleCustomInput />}
@@ -256,7 +276,12 @@ const EditTask = () => {
                       name="color"
                       value={f}
                       checked={f === color}
-                      onChange={(evt) => setColor(evt.target.value)}
+                      onChange={(evt) => {
+                        setColor(evt.target.value);
+                        if (!isChanged) {
+                          setIsChanged(true);
+                        }
+                      }}
                     />
                     <label
                       htmlFor={`color-${f}-1`}
