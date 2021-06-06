@@ -1,4 +1,4 @@
-import { shallowEqual, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import {
   getEditingTaskId,
   getFilter,
@@ -10,12 +10,14 @@ import Task from "../Task/Task";
 import EditTask from "../EditTask/EditTask";
 import { Filter } from "../../utils/filters";
 import { Comparator, ComparatorName } from "../../utils/sort";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { fetchTasks } from "../../store/app-store/actions";
 
 const TASKS_PER_STEP = 4;
 const INITIAL_COUNT = 8;
 
 const TasksList = () => {
+  const dispatch = useDispatch();
   const tasks = useSelector(getTasks, shallowEqual);
   const filter = useSelector(getFilter, shallowEqual);
   const sort = useSelector(getSort, shallowEqual);
@@ -24,6 +26,14 @@ const TasksList = () => {
   const [shownTasksCount, setShownTasksCount] = useState(INITIAL_COUNT);
   const onShowMoreBtnClick = () =>
     setShownTasksCount((prevState) => prevState + TASKS_PER_STEP);
+
+  useEffect(() => {
+    dispatch(fetchTasks());
+  }, []);
+
+  if (!tasks) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <>
@@ -41,11 +51,11 @@ const TasksList = () => {
           .sort(Comparator[sort])
           .slice(0, shownTasksCount)
           .map((t) => {
-            if (editingTaskId !== t.id) {
-              return <Task key={`task-${t.id}`} task={t} />;
+            if (editingTaskId !== t._id) {
+              return <Task key={`task-${t._id}`} task={t} />;
             }
 
-            return <EditTask key={`task-${t.id}`} />;
+            return <EditTask key={`task-${t._id}`} />;
           })}
       </div>
       {shownTasksCount < tasks.length && (

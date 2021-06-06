@@ -1,11 +1,10 @@
 import { useDispatch } from "react-redux";
-import { nanoid } from "nanoid";
 
 import { loadTask, setTaskToEdit } from "../../store/app-store/actions";
 import { DEFAULT_TASK } from "../../utils/conts";
 
 const createNewTask = () => {
-  return { id: nanoid(), ...DEFAULT_TASK };
+  return { _id: "new task", ...DEFAULT_TASK };
 };
 
 const Header = () => {
@@ -14,7 +13,7 @@ const Header = () => {
   const onAddTaskClick = () => {
     const newTask = createNewTask();
     dispatch(loadTask(newTask));
-    dispatch(setTaskToEdit({ id: newTask.id, isNew: true }));
+    dispatch(setTaskToEdit({ id: newTask._id, isNew: true }));
   };
 
   return (

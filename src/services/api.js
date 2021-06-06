@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACKEND_URL = ``;
+const BACKEND_URL = "https://tasky-backend.herokuapp.com/tasks";
 const REQUEST_TIMEOUT = 10000;
 
 export const createAPI = () => {

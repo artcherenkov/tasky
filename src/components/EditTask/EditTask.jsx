@@ -8,7 +8,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getEditingTaskId, getTaskById } from "../../store/app-store/selectors";
 import IconWave from "../IconWave/IconWave";
 import {
-  loadTask,
+  deleteTask,
+  editTask,
+  postTask,
   removeTask,
   setTaskToEdit,
 } from "../../store/app-store/actions";
@@ -102,11 +104,19 @@ const EditTask = () => {
   const onSubmit = (evt) => {
     evt.preventDefault();
     const updatedTask = { ...task, description, dueDate, repeatingDays, color };
-    dispatch(loadTask(updatedTask));
-    dispatch(setTaskToEdit({ id: -1 }));
+    if (updatedTask._id === "new task") {
+      dispatch(postTask(updatedTask)).then(() => {
+        dispatch(removeTask("new task"));
+        dispatch(setTaskToEdit({ id: -1 }));
+      });
+    } else {
+      dispatch(editTask(updatedTask)).then(() =>
+        dispatch(setTaskToEdit({ id: -1 }))
+      );
+    }
   };
   const onDeleteBtnClick = () => {
-    dispatch(removeTask(editingTaskId));
+    dispatch(deleteTask(editingTaskId));
   };
 
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (

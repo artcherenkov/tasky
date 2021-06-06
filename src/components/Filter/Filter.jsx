@@ -9,11 +9,17 @@ const FilterComponent = () => {
   const tasks = useSelector(getTasks, shallowEqual);
   const filter = useSelector(getFilter, shallowEqual);
 
-  const expiredTasksCount = tasks.filter(Filter.OVERDUE).length;
-  const todaysTasksCount = tasks.filter(Filter.TODAY).length;
-  const favoriteTasksCount = tasks.filter(Filter.FAVORITES).length;
-  const repeatingTasksCount = tasks.filter(Filter.REPEATING).length;
-  const archivedTasksCount = tasks.filter(Filter.ARCHIVE).length;
+  const expiredTasksCount = tasks ? tasks.filter(Filter.OVERDUE).length : "...";
+  const todaysTasksCount = tasks ? tasks.filter(Filter.TODAY).length : "...";
+  const favoriteTasksCount = tasks
+    ? tasks.filter(Filter.FAVORITES).length
+    : "...";
+  const repeatingTasksCount = tasks
+    ? tasks.filter(Filter.REPEATING).length
+    : "...";
+  const archivedTasksCount = tasks
+    ? tasks.filter(Filter.ARCHIVE).length
+    : "...";
 
   const onFilterChange = (filterName) => () => {
     dispatch(changeFilter(filterName));
@@ -30,7 +36,10 @@ const FilterComponent = () => {
         onChange={onFilterChange(FilterName.ALL)}
       />
       <label htmlFor="filter__all" className="filter__label">
-        All <span className="filter__all-count">{tasks.length}</span>
+        All{" "}
+        <span className="filter__all-count">
+          {tasks ? tasks.length : "..."}
+        </span>
       </label>
 
       <input

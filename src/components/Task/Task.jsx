@@ -7,12 +7,12 @@ import { loadTask, setTaskToEdit } from "../../store/app-store/actions";
 const Task = (props) => {
   const dispatch = useDispatch();
   const { task } = props;
-  const { id, color, description, dueDate, repeatingDays } = task;
+  const { _id, color, description, dueDate, repeatingDays } = task;
 
   const isRepeating = Object.values(repeatingDays).some((d) => d);
   const isExpired = moment(dueDate).isBefore(moment());
 
-  const onEditBtnClick = () => dispatch(setTaskToEdit({ id }));
+  const onEditBtnClick = () => dispatch(setTaskToEdit({ id: _id }));
   const onArchiveBtnClick = () =>
     dispatch(loadTask({ ...task, isArchived: !task.isArchived }));
   const onFavoriteBtnClick = () =>
