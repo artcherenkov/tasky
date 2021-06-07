@@ -23,7 +23,7 @@ const Header = () => {
   return (
     <>
       <section className="main__control control container">
-        <h1 className="control__title">TASKMANAGER</h1>
+        <h1 className="control__title">TASKY</h1>
         <section className="control__btn-wrap">
           <button
             className="control__label control__label--new-task"
